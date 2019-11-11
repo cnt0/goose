@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	crypto_rand "crypto/rand"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -69,7 +68,9 @@ func NonceFromPks(ePk, pk *[EncrPkSize]byte) [NonceSize]byte {
 }
 
 func usage() {
-	fmt.Println(Usage)
+	if _, err := io.WriteString(os.Stdout, Usage); err != nil {
+		panic(err)
+	}
 	os.Exit(0)
 }
 
