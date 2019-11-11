@@ -140,7 +140,7 @@ func sign() {
 	}
 	var sk [SignSkSize]byte
 
-  // read secret key
+	// read secret key
 	f, err := os.Open(os.Args[2])
 	if err != nil {
 		panic(err)
@@ -150,7 +150,7 @@ func sign() {
 		panic(err)
 	}
 
-  // read message
+	// read message
 	msg, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
@@ -170,7 +170,7 @@ func verify() {
 	var pk [SignPkSize]byte
 	var sig [SignatureSize]byte
 
-  // read public key
+	// read public key
 	fpk, err := os.Open(os.Args[2])
 	if err != nil {
 		panic(err)
@@ -180,7 +180,7 @@ func verify() {
 		panic(err)
 	}
 
-  // read signature
+	// read signature
 	fsig, err := os.Open(os.Args[3])
 	if err != nil {
 		panic(err)
@@ -190,7 +190,7 @@ func verify() {
 		panic(err)
 	}
 
-  // read message
+	// read message
 	msg, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
@@ -211,7 +211,7 @@ func encrypt() {
 
 	var pk [EncrPkSize]byte
 
-  // read public key
+	// read public key
 	fpk, err := os.Open(os.Args[2])
 	if err != nil {
 		panic(err)
@@ -221,13 +221,13 @@ func encrypt() {
 		panic(err)
 	}
 
-  // ephemeral keypair
+	// ephemeral keypair
 	ePk, eSk, err := box.GenerateKey(crypto_rand.Reader)
 	if err != nil {
 		panic(err)
 	}
 
-  // read message
+	// read message
 	msg, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
@@ -236,8 +236,8 @@ func encrypt() {
 	nonce := NonceFromPks(ePk, &pk)
 	enc := box.Seal(nil, msg, &nonce, &pk, eSk)
 
-  // encrypted message structure:
-  // [x25519:1:][ephemeral_pk][encrypted_data]
+	// encrypted message structure:
+	// [x25519:1:][ephemeral_pk][encrypted_data]
 	if _, err := io.CopyN(os.Stdout, bytes.NewBufferString(EncrHeader), int64(len(EncrHeader))); err != nil {
 		panic(err)
 	}
@@ -258,7 +258,7 @@ func decrypt() {
 	var pk [EncrPkSize]byte
 	var ePk [EncrPkSize]byte
 
-  // read secret key
+	// read secret key
 	fsk, err := os.Open(os.Args[2])
 	if err != nil {
 		panic(err)
@@ -268,17 +268,17 @@ func decrypt() {
 		panic(err)
 	}
 
-  // public key from secret key to generate nonce
+	// public key from secret key to generate nonce
 	curve25519.ScalarBaseMult(&pk, &sk)
 
-  // should be "x25519:1:"
+	// should be "x25519:1:"
 	header := make([]byte, len(EncrHeader))
 	if _, err := io.ReadFull(os.Stdin, header); err != nil {
 		panic(err)
 	}
-  if string(header) != EncrHeader {
-    panic("unknown encrypted message header")
-  }
+	if string(header) != EncrHeader {
+		panic("unknown encrypted message header")
+	}
 
 	if _, err := io.ReadFull(os.Stdin, ePk[:]); err != nil {
 		panic(err)
