@@ -1,0 +1,11 @@
+on: push
+name: build-linux
+jobs:
+  checks:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: run
+      uses: cedrickring/golang-action@1.4.1
+      env:
+        GO111MODULE: "on"
