@@ -108,6 +108,9 @@ func genkey() {
 func pubkey() {
 	var sk [SignSkSize]byte
 	n, err := os.Stdin.Read(sk[:])
+  // if key size == 64 (SignSkSize), then it will be treated as ed25519 secret key
+  // if key size == 32 (EncrSkSize), then curve25519
+  // otherwise error
 	if err != nil {
 		panic(err)
 	}
